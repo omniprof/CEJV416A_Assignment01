@@ -102,7 +102,7 @@ public class CEJV416A_Assignment01 {
      */
     private void doLoanPaymentInput() {
         loanAmount = inputDouble("Enter loan amount, maximum: ", 1_000_000.00);
-        interestRate = inputDouble("Enter interest rate as a decimal (5% -> 0.05), maximum: ", 1.0) / 12;
+        interestRate = inputDouble("Enter interest rate as a decimal (5% -> 0.05), maximum: ", 1.0);
         term = inputDouble("Enter the term in months: ", 120.0);
     }
 
@@ -111,7 +111,7 @@ public class CEJV416A_Assignment01 {
      */
     private void doFutureValueInput() {
         futureValue = inputDouble("Enter monthly savings amount, maximum ", 1_000.00);
-        interestRate = inputDouble("Enter interest rate as a decimal (5% -> 0.05), maximum: ", 1.0) / 12;
+        interestRate = inputDouble("Enter interest rate as a decimal (5% -> 0.05), maximum: ", 1.0);
         term = inputDouble("Enter the term in months, maximum: ", 120.0);
     }
 
@@ -120,7 +120,7 @@ public class CEJV416A_Assignment01 {
      */
     private void doSavingsGoalInput() {
         savingsAmount = inputDouble("Enter savings goal amount, maximum: ", 1_000_000.00);
-        interestRate = inputDouble("Enter interest rate as a decimal (5% -> 0.05) maximum: ", 1.0) / 12;
+        interestRate = inputDouble("Enter interest rate as a decimal (5% -> 0.05) maximum: ", 1.0);
         term = inputDouble("Enter the term in months, maximum: ", 120.0);
     }
 
@@ -130,8 +130,11 @@ public class CEJV416A_Assignment01 {
      * @return the loan payment
      */
     private double doLoanPayment() {
-        double result = loanAmount * ((interestRate) / (1 - Math.pow(1 + interestRate, -term)));
-        return result;
+        var ir = interestRate/12.0;
+        double result = loanAmount * ((ir) / (1 - Math.pow(1 + ir, -term)));
+        result = Math.round(result*100);
+        result /= 100;
+        return Math.abs(result);
     }
 
     /**
@@ -140,7 +143,10 @@ public class CEJV416A_Assignment01 {
      * @return the monthly amount to save
      */
     private double doFutureValue() {
-        double result = savingsAmount * (interestRate / (1 - Math.pow(1 + interestRate, term)));
+        var ir = interestRate/12.0;
+        double result = savingsAmount * (ir / (1 - Math.pow(1 + ir, term)));
+        result = Math.round(result*100);
+        result /= 100;
         return Math.abs(result);
     }
 
@@ -151,7 +157,10 @@ public class CEJV416A_Assignment01 {
      * @return the savings goal
      */
     private double doSavingsGoal() {
-        double result = futureValue * (((1 - Math.pow(1 + interestRate, term)) / interestRate));
+        var ir = interestRate/12.0;
+        double result = futureValue * ((1 - Math.pow(1 + ir, term)) / ir);
+        result = Math.round(result*100);
+        result /= 100;
         return Math.abs(result);
     }
 
@@ -167,25 +176,25 @@ public class CEJV416A_Assignment01 {
             switch (choice) {
                 case 'A' -> {
                     doLoanPaymentInput();
-                    System.out.printf("Monthly payment will be %.2f.\n", doLoanPayment());
+                    System.out.printf("Monthly payment will be %.2f.\n\n", doLoanPayment());
                 }
                 case 'B' -> {
                     doFutureValueInput();
-                    System.out.printf("Savings goal %.2f.\n", doSavingsGoal());
+                    System.out.printf("Savings goal %.2f.\n\n", doSavingsGoal());
                 }
                 case 'C' -> {
                     doSavingsGoalInput();
-                    System.out.printf("Save %.2f each month.\n", doFutureValue());
+                    System.out.printf("Save %.2f each month.\n\n", doFutureValue());
                 }
                 case 'D' ->
                     System.out.println("Thank you for using the CEJV416A calculator");
                 default -> {
-                    System.out.println("Something has gone wrong. Call IT department.");
-                    System.exit(1);
+                    System.out.println(">>>>>> Something has gone wrong. Call IT department. <<<<<<");
+                    System.exit(0);
                 }
             }
 
-        } while (choice != 'd');
+        } while (choice != 'D');
     }
 
     /**
